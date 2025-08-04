@@ -1,0 +1,24 @@
+<form id="yamlForm">
+  <input name="operationName" placeholder="Operation Name" />
+  <input name="url" placeholder="URL" />
+  <select name="method">
+    <option>GET</option><option>POST</option><option>PUT</option>
+  </select>
+  <!-- More fields here -->
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+document.getElementById('yamlForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  await fetch('/generate-yaml', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(r => r.json()).then(resp => {
+    window.location.href = '/download/' + resp.id;
+  });
+});
+</script>
