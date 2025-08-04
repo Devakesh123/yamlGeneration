@@ -20,7 +20,7 @@ public class YAMLController {
     @PostMapping("/generate-yaml")
     public ResponseEntity<Map<String, Object>> generateYaml(@RequestBody YAMLRequest request) {
         try {
-            Long id = service.saveAndGenerate(request);
+            Long id = service.saveAndGenerate1(request);
             return ResponseEntity.ok(Map.of("id", id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

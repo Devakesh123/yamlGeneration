@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.spel.ast.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 
@@ -83,7 +83,9 @@ public class YAMLService {
 
         methodMap.put("summary", request.getOperationName());
         methodMap.put("parameters", parameters);
-        methodMap.put("requestBody", requestBody);
+        if (!request.getMethod().equalsIgnoreCase("GET")) {
+            methodMap.put("requestBody", requestBody);
+        }
         methodMap.put("responses", responses);
 
         paths.put(request.getUrl(), Map.of(request.getMethod().toLowerCase(), methodMap));
@@ -102,7 +104,7 @@ public class YAMLService {
     
     private Map<String, Object> jsonToSchema(String jsonString) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> jsonMap = mapper.readValue(jsonString, new TypeReference<>() {});
+        Map<String, Object> jsonMap = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
         Map<String, Object> properties = new LinkedHashMap<>();
 
         for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
